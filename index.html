@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <title>SENAI - NOTAS</title>
+</head>
+<body>
+    <table class="table">
+        <thead id="thead">
+          <tr id="trCampo">
+            <th scope="col">#</th>
+            <th scope="col">Nome</th>
+            <th scope="col">Nota 1</th>
+            <th scope="col">Nota 2</th>
+            <th scope="col">Nota 3</th>
+            <th scope="col" id="campo_media">Média</th>
+            <th scope="col" id="campo_situacao">Situação</th>
+          </tr>
+        </thead>
+        <tbody id="tbody">
+          <tr id="tr1">
+            <th>1</th>
+            <td><input type="text" class="form-control" id="nome1" placeholder="nome"></td>
+            <td><input type="number" class="form-control" id="nota1.1" placeholder=""></td>
+            <td><input type="number" class="form-control" id="nota2.1" placeholder=""></td>
+            <td><input type="number" class="form-control" id="nota3.1" placeholder="">
+            <td><output id="media_aluno1"></output></td>
+            <td><output id="situacao1"></output></td>
+          </tr>
+          <tr id="tr2">
+            <th>2</th>
+            <td><input type="text" class="form-control" id="nome2" placeholder="nome"></td>
+            <td><input type="number" class="form-control" id="nota1.2" placeholder=""></td>
+            <td><input type="number" class="form-control" id="nota2.2" placeholder=""></td>
+            <td><input type="number" class="form-control" id="nota3.2" placeholder="">
+            <td><output id="media_aluno2"></output></td>
+            <td><output id="situacao2"></output></td>
+          </tr>
+        </tbody>
+      </table>
+
+      <button type="button" class="btn btn-danger btn-lg" onclick="ampliarLinha()">Add. Aluno</button>
+
+      <button type="button" class="btn btn-danger btn-lg" onclick="ampliarNotas()">Add. Nota</button>
+
+      <button type="button" class="btn btn-secondary btn-lg" onclick="ordemCres()">Médias Crescente</button>
+
+      <button type="button" class="btn btn-secondary btn-lg" onclick="ordemDec()">Médias Decrescente</button>
+
+      <button type="button" class="btn btn-secondary btn-lg" onclick="ordemAlfa()">Ordem Alfabética</button>
+      
+
+      <button type="button" class="btn btn-success btn-lg" onclick="calcular()">Calcular</button>
+
+      <br><br>
+      <div class="container-fluid">
+        <div class="row">
+          <div id="colmedia" class="col text-center">
+            <h1 id="txt_media">Média geral da sala: </h1>
+            <h1 id="media_geral"></h1>
+          </div>
+        </div>
+      </div>
+      
+</body>
+</html>
