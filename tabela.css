@@ -1,0 +1,88 @@
+*{
+    padding: 0;
+    margin: 0;
+    border: 0;
+    box-sizing: border-box;
+}
+
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    background-color: #6B7AEE;
+    height: 110vh;
+}
+
+.tabela-responsiva{
+    width: 98%;
+    overflow-x: auto;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.painel-controle{
+    width: 100%;
+    padding: 10px 0px 10px 0px;
+    margin-bottom: 20px;
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    background-color: #23396C;
+}
+
+.painel-controle button{
+    width: 150px;
+    height: 60px;
+    font-size: 16px;
+    background-color: #23396C;
+    color: white;
+    border: 2px solid #23396C;
+    font-weight: bold;
+    letter-spacing: 2px;
+    transition: 0.3s ease-in-out;
+}
+
+.painel-controle button:hover{
+    background-color: #142755;
+    transition: 0.3s ease-in-out;
+    cursor: pointer;
+    border-radius: 10px;
+    border: 2px solid #94AFEE;
+}
+
+.desc-tabela{
+    margin: 10px 0px 10px 0px;
+    font-size: 28px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 2px 2px 4px #142755, -2px -2px 4px #142755;
+}
+
+
+table{
+    width: 100%;
+    border-collapse: collapse;
+    background-color: #e3ecff;
+}
+
+table th, table td{
+    border: 3px solid #142755;
+    text-align: center;
+    padding: 10px;
+}
+
+input{
+    width: 75%;
+    padding: 5px 0px 5px 10px;
+    font-size: 20px;
+    border-radius: 5px;
+    border: 2px solid #142755;
+    background-color: rgb(245, 245, 245);
+    color: black;
+}
+
+input:focus{
+    outline: none;
+}
+
+tfoot td{
+    padding: 0px;
+}
