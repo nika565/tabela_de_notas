@@ -1,244 +1,471 @@
-// Matriz para organizar o nome do alunos, as notas e a médias
-let alunos = []
-// A Tabela inicialmente começara com 2 alunos e 3 notas para cada
-let qtd_alunos = 2
-let qtd_notas = 3
-let soma = 0
-// Média geral da Sala
-let soma_geral = 0
-let media_geral = 0
+/*
+----------------------------- Manipulação da tabela ---------------------------------
+*/
+// Pegar os eventos de clique
+document.addEventListener('click', (evento) => {
 
-function calcular(){
-    
-    //Loop para inserir alunos na mattriz
-    for(let i = 1; i <= qtd_alunos; i++){
-        alunos[i-1] = []
-        //Resgatando o nome dos alunos e o ID
-        alunos[i-1].push(i)
-        alunos[i-1].push(document.getElementById(`nome${i}`).value)
-        // loop para resgatar as notas de cada aluno
-        for(let j = 1; j <= qtd_notas; j++){
-            //Usando loop para selecionar o ekemento HTML específico
-            alunos[i-1].push(Number(document.getElementById(`nota${j}.${i}`).value))
-            soma = soma + alunos[i-1][j+1]
+    // Capturando o elemento clicado
+    const elemento = evento.target;
+
+    if (elemento.classList.contains('adicionar-aluno')) {
+        adicionaAlunos();
+    }
+
+    if (elemento.classList.contains('adicionar-nota')) {
+        adicionaNotas();
+    }
+
+    if (elemento.classList.contains('calcular-Media')) {
+
+        // Condicional para verificar se os campos estão vazios
+        console.log(verificaVazio());
+        if (verificaVazio()) return alert('Todos os campos devem ser preenchidos.');
+
+        listaDeAlunos();
+    }
+
+    if (elemento.classList.contains('ordem-alfabetica')) {
+        if (verificaVazio()) return alert('Todos os campos devem ser preenchidos.');
+        listaDeAlunos();
+        ordemAlfabetica(listaDeAlunos());
+    }
+
+    if (elemento.classList.contains('ordem-crescente')) {
+        if (verificaVazio()) return alert('Todos os campos devem ser preenchidos.');
+        listaDeAlunos();
+        ordemCrescente(listaDeAlunos());
+    }
+
+    if (elemento.classList.contains('ordem-decrescente')) {
+        if (verificaVazio()) return alert('Todos os campos devem ser preenchidos.');
+        listaDeAlunos();
+        ordemDecrescente(listaDeAlunos());
+    }
+
+});
+
+
+function adicionaAlunos() {
+
+    // Selecionando a tabela
+    const corpoTabela = document.querySelector('.corpo-tabela');
+
+
+    // Craindo os elementos que irão ser adicionados
+    const linha = document.createElement('tr');
+    const id = document.createElement('th');
+
+    // Adicionando classes nos elementos
+    id.className = 'id-aluno'
+
+    // Para adicionar o ID do aluno, primeiro precisamos ver quantos alunos tem
+    const qtdAlunos = quantidadeAlunos();
+    id.textContent = `${qtdAlunos + 1}`;
+
+    linha.appendChild(id);
+
+    corpoTabela.appendChild(linha);
+
+    // Quantiddaes de notas para gerar os campos
+    const qtdNotas = quantidadeNotas();
+
+
+    // Craindo as colunas
+    for (let i = 0; i <= qtdNotas + 2; i++) {
+
+        const coluna = document.createElement('td');
+
+        if (i === qtdNotas + 1) {
+            coluna.classList = 'media-aluno'
         }
-        // Inserindo a média do aluno na matriz
-        alunos[i-1].push(soma / qtd_notas)
-        soma = 0
-        // Soma da média geral da sala
-        soma_geral = soma_geral + alunos[i-1][alunos[i-1].length-1]
-    }
 
-    // Situação do aluno
-    for(i = 1; i <= qtd_alunos; i++){
-        // Pegar a média do aluno
-        document.getElementById(`media_aluno${i}`).innerHTML = alunos[i-1][alunos[i-1].length-1]
-
-        if(alunos[i-1][alunos[i-1].length-1] > 50){
-            document.getElementById(`situacao${i}`).innerHTML = `Aprovado`
-            document.getElementById(`situacao${i}`).style.backgroundColor = 'green'
-            alunos[i-1].push('Aprovado')
-
-        }else if(alunos[i-1][alunos[i-1].length-1] < 45){
-            document.getElementById(`situacao${i}`).innerHTML = `Reprovado` 
-            document.getElementById(`situacao${i}`).style.backgroundColor = 'red'
-            alunos[i-1].push('Reprovado')
-
-        }else{
-            document.getElementById(`situacao${i}`).innerHTML = `Recuperação`
-            document.getElementById(`situacao${i}`).style.backgroundColor = 'yellow'
-            alunos[i-1].push('Recuperação')
+        if (i === qtdNotas + 2) {
+            coluna.classList = 'situacao-aluno'
         }
 
+        linha.appendChild(coluna);
+
+        const input = document.createElement('input');
+
+        // adicionando classe no input
+        if (i === 0) {
+            input.className = 'campo-nome';
+        } else {
+            input.className = 'campo-nota';
+        }
+
+        if (i <= qtdNotas) {
+            coluna.appendChild(input);
+        }
+
+
     }
 
-    media_geral = soma_geral / qtd_alunos
-
-    // Apresentando a média geral da sala
-    document.getElementById('media_geral').innerHTML = media_geral
-    if(media_geral > 50){
-        document.getElementById('colmedia').style.backgroundColor = 'green'
-        document.getElementById('media_geral').style.color = 'white'
-        document.getElementById('txt_media').style.color = 'white'
-    }else if(media_geral < 45){
-        document.getElementById('colmedia').style.backgroundColor = 'red'
-        document.getElementById('media_geral').style.color = 'white'
-        document.getElementById('txt_media').style.color = 'white'
-    }else{
-        document.getElementById('colmedia').style.backgroundColor = 'yellow'
-        document.getElementById('media_geral').style.color = 'black'
-        document.getElementById('txt_media').style.color = 'black'
-    }
-    soma_geral = 0
-
-    console.log(alunos)
 }
 
-function ampliarLinha(){
-    qtd_alunos++
-    
-    // A Quantidade máxima de alunos que podem ser inseridos são 10, então ele
-    // Executa o loop redenrizando a tabela de acordo com a quantidade de alunos e notas
-    if(qtd_alunos <= 10){
-        document.getElementById('tbody').innerHTML = ``
+function adicionaNotas() {
 
-        for(let i = 1; i <= qtd_alunos; i++ ){
-            document.getElementById('tbody').innerHTML += `<tr id="tr${i}">
-            <th>${i}</th>
-            <td><input type="text" class="form-control" id="nome${i}" placeholder="nome"></td>`
+    // Craindo o elementos titulo
+    const tituloNota = document.createElement('th');
 
-            for(let j = 1; j <= qtd_notas; j++){
-                document.getElementById(`tr${i}`).innerHTML += `<td><input type="number" class="form-control" id="nota${j}.${i}" placeholder=""></td>
-                </tr>`
+    // Identificando a quantidade de IDs
+    const qtdAlunos = quantidadeAlunos()
+
+    // Identificando a quantidade de notas
+    const qtdNotas = quantidadeNotas()
+
+    // Selecionando os elementos para adicionar os elementos criados antes
+    const media = document.querySelector('.media');
+
+    // Adicionando o título
+    media.parentNode.insertBefore(tituloNota, media);
+
+    // Colocando título no elemento
+    tituloNota.textContent = `Nota ${qtdNotas + 1}`;
+
+    // Loop para o iterar sobre cada elemento na tabela e adicionar o campo nota antes desse elemento
+    for (let indice = 0; indice < qtdAlunos; indice++) {
+
+        // Criando elementos
+        const novaColunaNota = document.createElement('td');
+        const novoCampoNota = document.createElement('input');
+
+        // Colocando classes nos elementos
+        tituloNota.className = 'nota';
+        novoCampoNota.className = 'campo-nota';
+
+        // Adicionando o input dentro da coluna
+        novaColunaNota.appendChild(novoCampoNota);
+
+        // Adicionando os elementos das notas de acordo com a lista de classes
+        const mediaAluno = document.getElementsByClassName('media-aluno')[indice];
+        mediaAluno.parentNode.insertBefore(novaColunaNota, mediaAluno);
+
+    }
+
+
+}
+
+// Funções para trabalhar com a quantidade de alunos e notas presentes na tabela
+function quantidadeAlunos() {
+    return document.querySelectorAll('.id-aluno').length;
+}
+
+function quantidadeNotas() {
+    return document.querySelectorAll('.nota').length
+}
+
+// Verificando se existe algum input Vazio
+function verificaVazio() {
+    const inputs = document.getElementsByTagName('input');
+
+    for (let i = 0; i < inputs.length; i++) {
+
+        if (inputs[i].value === '') {
+            return true;
+        }
+
+    }
+
+    return false;
+}
+
+/*
+----------------------------- Calculando média --------------------------------------
+*/
+
+// Usando classe para construir objetos que vão representar os alunos e suas notas
+class Aluno {
+
+    constructor(id, nome, notas) {
+        this.id = id;
+        this.nome = nome;
+        this.notas = notas;
+    }
+
+    // Obter a média dos alunos
+    media() {
+        const soma = this.notas.map(Number).reduce((acumulador, valorAtual) => {
+            return acumulador + valorAtual;
+        }, 0)
+
+        return soma / this.notas.length;
+    }
+
+    retornaSituacao() {
+
+        if (this.media() >= 70) return 'Aprovado';
+
+        if (this.media() <= 49) return 'Reprovado'
+
+        return 'Recuperação'
+
+    }
+}
+
+/*
+------------------- Usando loops para criar e preencher os objetos ------------------
+
+    Craindo um array de objetos que vai reprsentar os alunos.
+*/
+
+function listaDeAlunos() {
+
+    // Craindo um array de objetos -> lista de alunos
+    const alunosLista = [];
+
+    // Pegando a quantidade de alunos e notas:
+    let qtdAlunos = quantidadeAlunos();
+    let qtdNotas = quantidadeNotas();
+
+    /*
+        A variável abaixo foi criada para percorrer todos os inputs da nota
+
+        Explicação: A idéia é fazer dois loops um dentro do outro, primeiro loop, 
+        serve para preencher o array com objetos.
+
+        o segundo loop é para preencher o array de notas que vai ficar dentro de 
+        cada objeto da lista de aluno
+
+        só que o segundo loop percorre de acordo com a quantidade de notas começando 
+        sempre por zero então ele sempre vai capturar notas do input 0 até o numero 
+        de notas. Isso gera um erro pois ele só vai percorrer e pegar as notas do 
+        primeiro aluno e gera o efeito de todos os alunos possuírem a mesma nota.
+
+        a forma que encontrei de solucionar o problema foi criar um contador 
+        independente dos dois loops, assim ele vai incrementando toda vez sem o 
+        valor resetar para zero como é o caso do iterador padrão do loop toda vez
+        que é iniciaclizado.
+        
+    */
+
+    // Contador independente
+    let contador = 0;
+
+    // Loop para preencher os objetos e colocar eles no array
+    for (let i = 0; i < qtdAlunos; i++) {
+
+        // Array que vai guardar as notas dos alunos
+        let arrayNotas = [];
+
+        // Pegando os elemetos do DOM
+        let id = document.getElementsByClassName('id-aluno')[i].innerText;
+        let nome = document.getElementsByClassName('campo-nome')[i].value;
+
+        // Array responsável por pegar as notas de cada aluno e guardar dentro de um array
+        for (let j = 0; j < qtdNotas; j++) {
+
+            let nota = document.getElementsByClassName('campo-nota')[contador].value;
+
+            if (validarNumeros(nota)) {
+                arrayNotas.push(nota);
+                contador++;
+            } else {
+                alert('O campo de notas só pode conter números.');
+                return;
             }
-            document.getElementById(`tr${i}`).innerHTML += `<td><output id="media_aluno${i}"></output></td>
-            <td><output id="situacao${i}"></output></td>
-        </tr>` 
-            
+
+
         }
-    }else{
-        qtd_alunos = 10
-        alert('Você atingiu o limite máximo de 10 alunos')
+
+
+        // criando um novo objeto aluno e adicionando no array de objetos
+        let novoAluno = new Aluno(id, nome, arrayNotas);
+        alunosLista.push(novoAluno);
+
+        // Apresentando a média e a situação
+        let media_aluno = document.getElementsByClassName('media-aluno')[i];
+        media_aluno.innerText = alunosLista[i].media();
+
+        let situacao = document.getElementsByClassName('situacao-aluno')[i];
+
+        // Verificando se o aluno esta aprovado ou não
+        if (alunosLista[i].retornaSituacao() === 'Aprovado') {
+            situacao.innerText = 'Aprovado';
+            situacao.style.backgroundColor = 'green';
+            situacao.style.color = 'white';
+        } else if (alunosLista[i].retornaSituacao() === 'Reprovado') {
+            situacao.innerText = 'Reprovado';
+            situacao.style.backgroundColor = 'red';
+            situacao.style.color = 'white';
+        } else {
+            situacao.innerText = 'Recuperação';
+            situacao.style.backgroundColor = 'yellow';
+            situacao.style.color = 'black';
+        }
+
     }
 
-    
+    return alunosLista;
 
 }
 
-
-function ampliarNotas(){
-    qtd_notas++
-
-    // Rederizar a tabela do zero de acordo com as quantidades de notas adicionadas
-    if(qtd_notas <= 6){
-        for(let j = 1; j <= qtd_alunos; j++){
-            
-            document.getElementById('trCampo').innerHTML = `<th scope="col">#</th>
-    <th scope="col">Nome</th>`
-
-            document.getElementById(`tr${j}`).innerHTML = `<th>${j}</th>
-    <td><input type="text" class="form-control" id="nome${j}" placeholder="nome"></td>
-    `
-            for(let i = 1; i <= qtd_notas; i++){
-                document.getElementById('trCampo').innerHTML += `<th scope="col">Nota ${i}</th>`
-    
-                document.getElementById(`tr${j}`).innerHTML += `<td><input type="number" class="form-control" id="nota${i}.${j}" placeholder=""></td>`
-                
-            }
-            document.getElementById('trCampo').innerHTML += `<th scope="col" id="campo_media">Média</th>
-            <th scope="col" id="campo_situacao">Situação</th>`
-    
-            document.getElementById(`tr${j}`).innerHTML += `<td><output id="media_aluno${j}"></output></td>
-            <td><output id="situacao${j}"></output></td>`
-        }
-        
-    }else{
-        qtd_notas = 6
-        alert('O máximo são seis notas')
-    }
-        
+// Função para validar o input recebido
+function validarNumeros(string) {
+    var regex = /^[0-9]+$/; // Expressão regular para verificar se contém apenas números
+    return regex.test(string);
 }
 
-function ordemCres() {
-    //Ordenando a matriz utilizando a função sort()
-    alunos.sort(function(a, b) {
-        return a[a.length - 2] - b[b.length - 2];
-    });
-    
-    console.log(alunos)
-    
-    // Renderizar a tabela inteira novamente, mas com a matriz ordenada de forma crescente
-    for(let i = 1; i <= qtd_alunos; i++){
-        document.getElementById(`tr${i}`).innerHTML = `<th>${alunos[i-1][0]}</th>
-        <td><input type="text" class="form-control" value="${alunos[i-1][1]}" id="nome${i}" placeholder="nome"></td>`
+// Função para ordernar em ordem alfabética
+function ordemAlfabetica(vetor) {
+    vetor.sort((a, b) => a.nome.localeCompare(b.nome));
 
-        //Renderizando os inputs com os valores das notas
-        for(let j = 1; j <= qtd_notas; j++){
-            document.getElementById(`tr${i}`).innerHTML += `<td><input type="number" class="form-control" value="${alunos[i-1][j+1]}" id="nota${j}.${i}" placeholder=""></td>`
+    let contador = 0;
+
+    const qtdAlunos = quantidadeAlunos();
+    const qtdNotas = quantidadeNotas();
+
+    for (let i = 0; i < qtdAlunos; i++) {
+
+        // Pegando os elemetos do DOM
+        let id = document.getElementsByClassName('id-aluno')[i];
+        let nome = document.getElementsByClassName('campo-nome')[i];
+
+        id.innerHTML = vetor[i].id;
+        nome.value = vetor[i].nome;
+
+        // Array responsável por pegar as notas de cada aluno e guardar dentro de um array
+        for (let j = 0; j < qtdNotas; j++) {
+
+            let nota = document.getElementsByClassName('campo-nota')[contador];
+
+            nota.value = vetor[i].notas[j];
+
+            contador++;
+
         }
 
-        // Renderizando o campo das média e da situação
-        if(alunos[i-1][alunos[i-1].length-2] > 50){
-            document.getElementById(`tr${i}`).innerHTML += `<td><output id="media_aluno${i}">${alunos[i-1][alunos[i-1].length-2]}</output></td>
-        <td><output style="background-color: green;" id="situacao${i}">${alunos[i-1][alunos[i-1].length-1]}</output></td>`
 
-        }else if(alunos[i-1][alunos[i-1].length-2] < 45){
-            document.getElementById(`tr${i}`).innerHTML += `<td><output id="media_aluno${i}">${alunos[i-1][alunos[i-1].length-2]}</output></td>
-        <td><output style="background-color: red;" id="situacao${i}">${alunos[i-1][alunos[i-1].length-1]}</output></td>`
-        }else{
-            document.getElementById(`tr${i}`).innerHTML += `<td><output id="media_aluno${i}">${alunos[i-1][alunos[i-1].length-2]}</output></td>
-        <td><output style="background-color: yellow;" id="situacao${i}">${alunos[i-1][alunos[i-1].length-1]}</output></td>`
+        // Apresentando a média e a situação
+        let media_aluno = document.getElementsByClassName('media-aluno')[i];
+        media_aluno.innerHTML = vetor[i].media();
+
+        let situacao = document.getElementsByClassName('situacao-aluno')[i];
+
+        // Verificando se o aluno esta aprovado ou não
+        if (vetor[i].retornaSituacao() === 'Aprovado') {
+            situacao.innerText = 'Aprovado';
+            situacao.style.backgroundColor = 'green';
+            situacao.style.color = 'white';
+        } else if (vetor[i].retornaSituacao() === 'Reprovado') {
+            situacao.innerText = 'Reprovado';
+            situacao.style.backgroundColor = 'red';
+            situacao.style.color = 'white';
+        } else {
+            situacao.innerText = 'Recuperação';
+            situacao.style.backgroundColor = 'yellow';
+            situacao.style.color = 'black';
         }
-        
-        
-        
+
     }
 }
 
-function ordemDec(){
-    // A função é parecida com a função da ordenação crescente, só muda a forma da ordenação
-    alunos.sort(function(a, b) {
-        return b[b.length - 2] - a[a.length - 2];
-    });
+// function para ordenar em média crescente
+function ordemCrescente(vetor) {
+    vetor.sort((a, b) => a.media() - b.media());
+    console.log(vetor);
 
-    console.log(alunos)
+    let contador = 0;
 
-    for(let i = 1; i <= qtd_alunos; i++){
-        document.getElementById(`tr${i}`).innerHTML = `<th>${alunos[i-1][0]}</th>
-        <td><input type="text" class="form-control" value="${alunos[i-1][1]}" id="nome${i}" placeholder="nome"></td>`
+    const qtdAlunos = quantidadeAlunos();
+    const qtdNotas = quantidadeNotas();
 
-        
-        for(let j = 1; j <= qtd_notas; j++){
-            document.getElementById(`tr${i}`).innerHTML += `<td><input type="number" class="form-control" value="${alunos[i-1][j+1]}" id="nota${j}.${i}" placeholder=""></td>`
+    for (let i = 0; i < qtdAlunos; i++) {
+
+        // Pegando os elemetos do DOM
+        let id = document.getElementsByClassName('id-aluno')[i];
+        let nome = document.getElementsByClassName('campo-nome')[i];
+
+        id.innerHTML = vetor[i].id;
+        nome.value = vetor[i].nome;
+
+        // Array responsável por pegar as notas de cada aluno e guardar dentro de um array
+        for (let j = 0; j < qtdNotas; j++) {
+
+            let nota = document.getElementsByClassName('campo-nota')[contador];
+
+            nota.value = vetor[i].notas[j];
+
+            contador++;
+
         }
 
-        if(alunos[i-1][alunos[i-1].length-2] > 50){
-            document.getElementById(`tr${i}`).innerHTML += `<td><output id="media_aluno${i}">${alunos[i-1][alunos[i-1].length-2]}</output></td>
-        <td><output style="background-color: green;" id="situacao${i}">${alunos[i-1][alunos[i-1].length-1]}</output></td>`
-        }else if(alunos[i-1][alunos[i-1].length-2] < 45){
-            document.getElementById(`tr${i}`).innerHTML += `<td><output id="media_aluno${i}">${alunos[i-1][alunos[i-1].length-2]}</output></td>
-        <td><output style="background-color: red;" id="situacao${i}">${alunos[i-1][alunos[i-1].length-1]}</output></td>`
-        }else{
-            document.getElementById(`tr${i}`).innerHTML += `<td><output id="media_aluno${i}">${alunos[i-1][alunos[i-1].length-2]}</output></td>
-        <td><output style="background-color: yellow;" id="situacao${i}">${alunos[i-1][alunos[i-1].length-1]}</output></td>`
+
+        // Apresentando a média e a situação
+        let media_aluno = document.getElementsByClassName('media-aluno')[i];
+        media_aluno.innerHTML = vetor[i].media();
+
+        let situacao = document.getElementsByClassName('situacao-aluno')[i];
+
+        // Verificando se o aluno esta aprovado ou não
+        if (vetor[i].retornaSituacao() === 'Aprovado') {
+            situacao.innerText = 'Aprovado';
+            situacao.style.backgroundColor = 'green';
+            situacao.style.color = 'white';
+        } else if (vetor[i].retornaSituacao() === 'Reprovado') {
+            situacao.innerText = 'Reprovado';
+            situacao.style.backgroundColor = 'red';
+            situacao.style.color = 'white';
+        } else {
+            situacao.innerText = 'Recuperação';
+            situacao.style.backgroundColor = 'yellow';
+            situacao.style.color = 'black';
         }
-        
-        
-        
+
     }
-    
 }
 
-function ordemAlfa(){
-    // A função é parecida com a função da ordenação crescente, só muda a forma da ordenação
-    alunos.sort(function(a, b) {
-        return a[1].localeCompare(b[1]);
-    });
-    
-    console.log(alunos)
+// function para ordenar em média crescente
+function ordemDecrescente(vetor) {
+    vetor.sort((a, b) => b.media() - a.media());
+    console.log(vetor);
 
-      for(let i = 1; i <= qtd_alunos; i++){
-        document.getElementById(`tr${i}`).innerHTML = `<th>${alunos[i-1][0]}</th>
-        <td><input type="text" class="form-control" value="${alunos[i-1][1]}" id="nome${i}" placeholder="nome"></td>`
+    let contador = 0;
 
-        
-        for(let j = 1; j <= qtd_notas; j++){
-            document.getElementById(`tr${i}`).innerHTML += `<td><input type="number" class="form-control" value="${alunos[i-1][j+1]}" id="nota${j}.${i}" placeholder=""></td>`
+    const qtdAlunos = quantidadeAlunos();
+    const qtdNotas = quantidadeNotas();
+
+    for (let i = 0; i < qtdAlunos; i++) {
+
+        // Pegando os elemetos do DOM
+        let id = document.getElementsByClassName('id-aluno')[i];
+        let nome = document.getElementsByClassName('campo-nome')[i];
+
+        id.innerHTML = vetor[i].id;
+        nome.value = vetor[i].nome;
+
+        // Array responsável por pegar as notas de cada aluno e guardar dentro de um array
+        for (let j = 0; j < qtdNotas; j++) {
+
+            let nota = document.getElementsByClassName('campo-nota')[contador];
+
+            nota.value = vetor[i].notas[j];
+
+            contador++;
+
         }
 
-        if(alunos[i-1][alunos[i-1].length-2] > 50){
-            document.getElementById(`tr${i}`).innerHTML += `<td><output id="media_aluno${i}">${alunos[i-1][alunos[i-1].length-2]}</output></td>
-        <td><output style="background-color: green;" id="situacao${i}">${alunos[i-1][alunos[i-1].length-1]}</output></td>`
-        }else if(alunos[i-1][alunos[i-1].length-2] < 45){
-            document.getElementById(`tr${i}`).innerHTML += `<td><output id="media_aluno${i}">${alunos[i-1][alunos[i-1].length-2]}</output></td>
-        <td><output style="background-color: red;" id="situacao${i}">${alunos[i-1][alunos[i-1].length-1]}</output></td>`
-        }else{
-            document.getElementById(`tr${i}`).innerHTML += `<td><output id="media_aluno${i}">${alunos[i-1][alunos[i-1].length-2]}</output></td>
-        <td><output style="background-color: yellow;" id="situacao${i}">${alunos[i-1][alunos[i-1].length-1]}</output></td>`
+
+        // Apresentando a média e a situação
+        let media_aluno = document.getElementsByClassName('media-aluno')[i];
+        media_aluno.innerHTML = vetor[i].media();
+
+        let situacao = document.getElementsByClassName('situacao-aluno')[i];
+
+        // Verificando se o aluno esta aprovado ou não
+        if (vetor[i].retornaSituacao() === 'Aprovado') {
+            situacao.innerText = 'Aprovado';
+            situacao.style.backgroundColor = 'green';
+            situacao.style.color = 'white';
+        } else if (vetor[i].retornaSituacao() === 'Reprovado') {
+            situacao.innerText = 'Reprovado';
+            situacao.style.backgroundColor = 'red';
+            situacao.style.color = 'white';
+        } else {
+            situacao.innerText = 'Recuperação';
+            situacao.style.backgroundColor = 'yellow';
+            situacao.style.color = 'black';
         }
-        
-        
-        
+
     }
-      
 }
