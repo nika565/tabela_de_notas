@@ -86,10 +86,15 @@ function adicionaAlunos() {
         linha.appendChild(coluna);
 
         const input = document.createElement('input');
+        input.type = 'number';
+
+
 
         // adicionando classe no input
         if (i === 0) {
             input.className = 'campo-nome';
+            input.type = 'text';
+
         } else {
             input.className = 'campo-nota';
         }
@@ -129,6 +134,8 @@ function adicionaNotas() {
         // Criando elementos
         const novaColunaNota = document.createElement('td');
         const novoCampoNota = document.createElement('input');
+
+        novoCampoNota.type = 'number';
 
         // Colocando classes nos elementos
         tituloNota.className = 'nota';
@@ -261,7 +268,7 @@ function listaDeAlunos() {
                 arrayNotas.push(nota);
                 contador++;
             } else {
-                alert('O campo de notas só pode conter números.');
+                alert('OS CAMPOS DE NOTAS DEVE TER SOMENTE NÚMEROS INTEIROS.');
                 return;
             }
 
